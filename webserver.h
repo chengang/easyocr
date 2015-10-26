@@ -6,7 +6,7 @@
 #include <string.h>
 #include <vector>
 
-#include "webcontroller.hpp"
+#include "webcontroller.h"
 
 class WebServer {
 private:

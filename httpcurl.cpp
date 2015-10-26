@@ -1,6 +1,6 @@
 #include <iostream>
 #include "curl/curl.h"
-#include "httpcurl.hpp"
+#include "httpcurl.h"
 
 size_t HttpCurl::OnWriteData(void *buf, size_t size, size_t nmemb,
                              void *userdata) {

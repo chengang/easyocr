@@ -2,7 +2,6 @@
 #define _CONTROLLER_
 
 #include <sstream>
-#include "httpcurl.hpp"
 
 class Controller {
 

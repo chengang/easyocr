@@ -4,7 +4,7 @@
 #include <locale>
 #include <boost/filesystem.hpp>
 
-#include "helper.hpp"
+#include "helper.h"
 
 std::string Helper::GetHashPath(std::string basePath, std::string filename) {
     std::locale loc;

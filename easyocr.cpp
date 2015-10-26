@@ -4,7 +4,7 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "cv.h"
-#include "easyocr.hpp"
+#include "easyocr.h"
 #include "opencv.cpp"
 
 CvSVM EasyOcr::svmvin;

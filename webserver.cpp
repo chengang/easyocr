@@ -1,5 +1,5 @@
-#include "webserver.hpp"
-#include "webcontroller.hpp"
+#include "webserver.h"
+#include "webcontroller.h"
 
 int WebServer::request_handler(void *cls, struct MHD_Connection *connection,
                                const char *url, const char *method,

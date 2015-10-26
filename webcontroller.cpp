@@ -3,9 +3,10 @@
 #include <iostream>
 #include <locale>
 
-#include "easyocr.hpp"
-#include "webserver.hpp"
-#include "helper.hpp"
+#include "easyocr.h"
+#include "webserver.h"
+#include "helper.h"
+#include "httpcurl.h"
 
 using namespace std;
 using namespace cv;

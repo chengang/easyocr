@@ -3,7 +3,7 @@
 #include <iostream>
 #include "opencv2/highgui/highgui.hpp"
 
-#include "easyocr.hpp"
+#include "easyocr.h"
 #include "webcontroller.cpp"
 
 using namespace std;
