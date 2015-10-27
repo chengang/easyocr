@@ -526,7 +526,8 @@ IplImage *charprocess0(IplImage *src, char file_dst[], int b) {
   minX =
       binimg
           ->width; // maxH记录最高的连通区域高度大小,maxY位对应的y坐标,maxW=0为对应的宽度;
-  int downy = 0, downh = 0; // downy记录剪切的最低边缘点,（？downh为对应的高度）;
+  int downy = 0,
+      downh = 0; // downy记录剪切的最低边缘点,（？downh为对应的高度）;
   float arearatio = 0.0; //面积比
   // int flag=0;
   //扫描方式：从下往上，从右往左
@@ -554,7 +555,7 @@ IplImage *charprocess0(IplImage *src, char file_dst[], int b) {
       continue;
     }
     int yh = rect1.y + rect1.height; //为了使式子简单;maxH=rect1.height;//
-                                     //maxH=downy-upymin;
+    // maxH=downy-upymin;
     if (downy == 0) {
       downy = yh;
       upymin = rect1.y;
@@ -590,7 +591,8 @@ IplImage *charprocess0(IplImage *src, char file_dst[], int b) {
   return (img);
 }
 //,直接二值化单个字符,返回识别字符序号
-int charprocess(IplImage *src, int diji, int *zifuxu, vector<IplImage *> &vinCharImg) {
+int charprocess(IplImage *src, int diji, int *zifuxu,
+                vector<IplImage *> &vinCharImg) {
   // char file_dst[100];
   int w = src->width;
   int h = src->height;
@@ -644,7 +646,8 @@ int charprocess(IplImage *src, int diji, int *zifuxu, vector<IplImage *> &vinCha
   maxY = 0, maxX = 0,
   maxW =
       0; // maxH记录最高的连通区域高度大小,maxY位对应的y坐标,maxW=0为对应的宽度;
-  int downy = 0, downh = 0; // downy记录剪切的最低边缘点,（？downh为对应的高度）;
+  int downy = 0,
+      downh = 0; // downy记录剪切的最低边缘点,（？downh为对应的高度）;
   while (contour) //开始排除非字符
   {
     CvRect rect = ((CvContour *)contour)->rect;
@@ -1001,7 +1004,7 @@ void DetectTrainvin() {
   int nImgNum =
       nLine / 2; //读入样本数量 ，因为是每隔一行才是图片路径，所以要除以2
   ////样本矩阵，nImgNum：横坐标是样本数量， WIDTH *
-  ///HEIGHT：样本特征向量，即图像大小 4752
+  /// HEIGHT：样本特征向量，即图像大小 4752
   data_mat = cvCreateMat(
       nImgNum, 5184,
       CV_32FC1); //这里第二个参数，即矩阵的列是由下面的descriptors的大小决定的，可以由descriptors.size()得到，且对于不同大小的输入训练图片，这个值是不同的
@@ -1025,12 +1028,11 @@ void DetectTrainvin() {
 
     cout << " processing " << img_path[i].c_str() << endl;
 
-    cvResize(
-        src,
-        trainImg); //读取图片 cv::Size(80,20), cv::Size(16,4), cv::Size(4,2),
-                   //cv::Size(4,2), 9
-                   //cvSize(232,28),cvSize(32,16),cvSize(20,6),cvSize(8,4),9
-                   //__98%
+    cvResize(src, trainImg); //读取图片 cv::Size(80,20), cv::Size(16,4),
+                             //cv::Size(4,2),
+    // cv::Size(4,2), 9
+    // cvSize(232,28),cvSize(32,16),cvSize(20,6),cvSize(8,4),9
+    //__98%
     HOGDescriptor *hog =
         new HOGDescriptor(cvSize(232, 28), cvSize(36, 16), cvSize(28, 6),
                           cvSize(6, 4), 9); //具体意思见参考文章1,2
@@ -1069,7 +1071,8 @@ void DetectTrainvin() {
   cvReleaseMat(&res_mat);
 }
 //第一次识别提取src为彩色图像；img为得到连通区域后的二值图像__________________________________________________________________________
-bool ExtrVin(IplImage *src, IplImage *img, CvSVM *svmvin, vector<IplImage *> &vinCharImg) {
+bool ExtrVin(IplImage *src, IplImage *img, CvSVM *svmvin,
+             vector<IplImage *> &vinCharImg) {
   CvSeq *contour = NULL;
   CvMemStorage *storage = cvCreateMemStorage(0);
   IplImage *img_Clone = cvCreateImage(cvGetSize(img), 8, 1);
@@ -1080,7 +1083,7 @@ bool ExtrVin(IplImage *src, IplImage *img, CvSVM *svmvin, vector<IplImage *> &vi
   cvCopy(src, img_Clone1); //归一化后的彩色图像
   cvCopy(img, img_Clone);  //得到的连通区域图片
   int k = 0;               //保存图片用
-  bool det = false;             //标记是否检测出正样本
+  bool det = false;        //标记是否检测出正样本
                            // CV_RETR_EXTERNAL：只检索最外面的轮廓；CV_RETR_LIST：检索所有的轮廓，并将其放入list中；CV_RETR_CCOMP：检索所有的轮廓，并将他们组织为两层：顶层是各部分的外部边
                            //界，第二层是空洞的边界；
   // CV_RETR_TREE：检索所有的轮廓，并重构嵌套轮廓的整个层次。
@@ -1179,8 +1182,8 @@ bool ExtrVin(IplImage *src, IplImage *img, CvSVM *svmvin, vector<IplImage *> &vi
           //开始字符分割
           cv::Mat matimg;
           matimg = cv::Mat(binaryimg);
-          //zifucount = 0; //分割出字符数
-          int zifuxu = 0;    //对字符剪切后的字符数
+          // zifucount = 0; //分割出字符数
+          int zifuxu = 0; //对字符剪切后的字符数
           // printf("开始字符分割\n");
           re_cut(matimg, nimg, threshold, sw, ++diji, 1, &zifuxu, vinCharImg);
           //如果分割出的字符数目少于17
@@ -1246,7 +1249,8 @@ bool ExtrVin(IplImage *src, IplImage *img, CvSVM *svmvin, vector<IplImage *> &vi
   return det;
 }
 //第二次识别
-bool ExtrVin1(IplImage *src, IplImage *img, CvSVM *svmvin, vector<IplImage *> &vinCharImg) {
+bool ExtrVin1(IplImage *src, IplImage *img, CvSVM *svmvin,
+              vector<IplImage *> &vinCharImg) {
   CvSeq *contour = NULL;
   CvMemStorage *storage = cvCreateMemStorage(0);
   IplImage *img_Clone = cvCreateImage(cvGetSize(img), 8, 1);
@@ -1268,7 +1272,7 @@ bool ExtrVin1(IplImage *src, IplImage *img, CvSVM *svmvin, vector<IplImage *> &v
   cvCopy(src, img_Clone1); //归一化后的彩色图像
   cvCopy(img, img_Clone);  //得到的连通区域图片
   int k = 0;               //保存图片用
-  bool det = FALSE;             //标记是否检测出正样本
+  bool det = FALSE;        //标记是否检测出正样本
                            // CV_RETR_EXTERNAL：只检索最外面的轮廓；CV_RETR_LIST：检索所有的轮廓，并将其放入list中；CV_RETR_CCOMP：检索所有的轮廓，并将他们组织为两层：顶层是各部分的外部边
                            //界，第二层是空洞的边界；
   // CV_RETR_TREE：检索所有的轮廓，并重构嵌套轮廓的整个层次。
@@ -1568,7 +1572,7 @@ void FindMark(IplImage *src, IplImage *img, int cishu, IplImage *dst) {
           p4.x = w - 20;
           p4.y = r.y + r.height - 20;
           flag = 0; // if(r.y+r.height<h);
-          // cout<<"dsfsdsd<w/3"<<endl;
+                    // cout<<"dsfsdsd<w/3"<<endl;
         }
 
       } else {
@@ -1662,7 +1666,8 @@ void process(IplImage *src, IplImage *binimg) {
   cvSobel(img1, img1, 1, 0, 3);
   int bin = otsu(img1);
   // cout<<bin<<endl;
-  cvThreshold(img1, binimg, bin, 255, CV_THRESH_BINARY); // cvNot(binimg,binimg);
+  cvThreshold(img1, binimg, bin, 255,
+              CV_THRESH_BINARY); // cvNot(binimg,binimg);
   // cvShowImage("22222域原图",binimg);
 
   // IplImage* binimg1 = cvCreateImage(cvGetSize(binimg), IPL_DEPTH_8U, 1);
@@ -1742,7 +1747,8 @@ IplImage *process2(IplImage *src) {
   cvSobel(img1, img1, 0, 1, 3);
   int bin = otsu(img1);
 
-  cvThreshold(img1, binimg, bin, 255, CV_THRESH_BINARY); // cvNot(binimg,binimg);
+  cvThreshold(img1, binimg, bin, 255,
+              CV_THRESH_BINARY); // cvNot(binimg,binimg);
   cvDilate(binimg, binimg, KR1, 5);
   cvReleaseStructuringElement(&KR1);
   cvReleaseImage(&img1);
@@ -1792,7 +1798,7 @@ int ifrotate(IplImage *src) {
         rect.width < 30) {
       k++;
       // cvRectangle(src,p1,p2,CV_RGB(255,0,0),1,8,0);
-      flag = 1; // 1 逆时针；2顺时针；
+      flag = 1;                 // 1 逆时针；2顺时针；
       maxx = max(maxx, rect.x); //最大x值
       maxy = max(maxy, rect.y + rect.height);
       if (maxy == (rect.y + rect.height)) {
@@ -1938,7 +1944,8 @@ void FeatureExtraction(IplImage *src, CvMat *data_mat, int ind) //
   // cout<<SVMtrainMat->rows<<endl;
 }
 //识别
-bool recvin(cv::Mat src_mat, char *pre, CvSVM *svmvin, CvSVM *svm33, CvSVM *svm35, CvSVM *svmLast5, const char * imgpath) {
+bool recvin(cv::Mat src_mat, char *pre, CvSVM *svmvin, CvSVM *svm33,
+            CvSVM *svm35, CvSVM *svmLast5, const char *imgpath) {
   int k = 0;
   string charList = "0123456789ABCDEFGHJKLMNPRSTUVWXYZIQ"; //字符
   IplImage *img = NULL;
@@ -2025,12 +2032,12 @@ bool recvin(cv::Mat src_mat, char *pre, CvSVM *svmvin, CvSVM *svm33, CvSVM *svm3
       FeatureExtraction(charImg, data_mat, 0);
       // printf("到这里了sssssssssssssssssss\n");
       if (vinCharImg.size() == 17) {
-        res =
-            charInd < 12 ? svm33->predict(data_mat) : svmLast5->predict(data_mat);
+        res = charInd < 12 ? svm33->predict(data_mat)
+                           : svmLast5->predict(data_mat);
 
       } else {
-        res =
-            charInd < 12 ? svm35->predict(data_mat) : svmLast5->predict(data_mat);
+        res = charInd < 12 ? svm35->predict(data_mat)
+                           : svmLast5->predict(data_mat);
       }
       if (res >= 33 && numFu < vinCharImg.size() - 17) {
         numFu++;
@@ -2038,7 +2045,7 @@ bool recvin(cv::Mat src_mat, char *pre, CvSVM *svmvin, CvSVM *svm33, CvSVM *svm3
         continue;
       }
 
-      //cerr << "000[" << res << "]k={" << k << "}" << endl;
+      // cerr << "000[" << res << "]k={" << k << "}" << endl;
       // cout<<charList[res];
       pre[k] = (char)charList[res];
       k++;

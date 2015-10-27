@@ -34,11 +34,13 @@ void EasyOcr::SetROIImageSavePath(std::string path) {
 }
 
 bool EasyOcr::Ocr(void) {
-  //this->Resize(720);
-  //this->TiltCorrect();
+  // this->Resize(720);
+  // this->TiltCorrect();
 
   char pre[30] = "";
-  bool ifRecSucc = recvin(this->mat, pre, &EasyOcr::svmvin, &EasyOcr::svm35, &EasyOcr::svm33, &EasyOcr::svmLast5, this->roiImageSavePath.c_str());
+  bool ifRecSucc =
+      recvin(this->mat, pre, &EasyOcr::svmvin, &EasyOcr::svm35, &EasyOcr::svm33,
+             &EasyOcr::svmLast5, this->roiImageSavePath.c_str());
   this->result = pre;
   return ifRecSucc;
 }

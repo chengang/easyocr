@@ -37,7 +37,7 @@ bool HttpCurl::GetVector(std::string &url, std::vector<char> &resp) {
 
   long httpcode = 0;
   res = curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpcode);
-  if (res != CURLE_OK || httpcode != 200 ) {
+  if (res != CURLE_OK || httpcode != 200) {
     std::cerr << "http code is not 200 (" << httpcode << ")" << std::endl;
     return false;
   }

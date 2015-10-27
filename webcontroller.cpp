@@ -42,11 +42,13 @@ public:
     EasyOcr eo(imgData);
 
     string roiImageSavePathRoot = "/var/www";
-    string roiImageSaveFullPath = Helper::GetHashPath(roiImageSavePathRoot, imgurl);
-    eo.SetROIImageSavePath(roiImageSavePathRoot + roiImageSaveFullPath );
+    string roiImageSaveFullPath =
+        Helper::GetHashPath(roiImageSavePathRoot, imgurl);
+    eo.SetROIImageSavePath(roiImageSavePathRoot + roiImageSaveFullPath);
     if (eo.Ocr()) {
       string result = eo.GetResult();
-      response << "{\"status\": \"success\", \"msg\": \"" << result << "\", \"imgpath\": \"" << roiImageSaveFullPath << "\"}";
+      response << "{\"status\": \"success\", \"msg\": \"" << result
+               << "\", \"imgpath\": \"" << roiImageSaveFullPath << "\"}";
     } else {
       response << "{\"status\": \"fail\", \"msg\": \"ocr fail\"}";
     }

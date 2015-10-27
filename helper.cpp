@@ -10,13 +10,14 @@
 #include "helper.h"
 
 std::string Helper::GetHashPath(std::string basePath, std::string filename) {
-    std::string hashFilename = Helper::GetSHA1String(filename);
-    std::string hashPath = hashFilename.substr(0, 3) + "/" + hashFilename.substr(3, 3);
-    
-    boost::filesystem::path p (basePath + "/" + hashPath);
-    boost::filesystem::create_directories(p);
+  std::string hashFilename = Helper::GetSHA1String(filename);
+  std::string hashPath =
+      hashFilename.substr(0, 3) + "/" + hashFilename.substr(3, 3);
 
-    return hashPath + "/" + hashFilename + ".jpg";
+  boost::filesystem::path p(basePath + "/" + hashPath);
+  boost::filesystem::create_directories(p);
+
+  return hashPath + "/" + hashFilename + ".jpg";
 }
 
 std::string Helper::GetSHA1String(std::string source) {
