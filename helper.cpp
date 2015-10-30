@@ -17,7 +17,7 @@ std::string Helper::GetHashPath(std::string basePath, std::string filename) {
   boost::filesystem::path p(basePath + "/" + hashPath);
   boost::filesystem::create_directories(p);
 
-  return hashPath + "/" + hashFilename + ".jpg";
+  return hashPath + "/" + hashFilename;
 }
 
 std::string Helper::GetSHA1String(std::string source) {

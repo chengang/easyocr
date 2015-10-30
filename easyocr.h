@@ -11,10 +11,12 @@ public:
   ~EasyOcr(void);
 
   std::string result;
-  std::string roiImageSavePath;
+  std::string imageSavePathVIN;
+  std::string imageSavePathRegDate;
   std::string GetResult(void);
   static bool LoadSVM(void);
-  void SetROIImageSavePath(std::string);
+  void SetImageSavePathVIN(std::string);
+  void SetImageSavePathRegDate(std::string);
   bool Ocr(void);
 
 private:

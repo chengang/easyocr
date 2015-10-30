@@ -41,14 +41,22 @@ public:
 
     EasyOcr eo(imgData);
 
-    string roiImageSavePathRoot = "/var/www";
-    string roiImageSaveFullPath =
-        Helper::GetHashPath(roiImageSavePathRoot, imgurl);
-    eo.SetROIImageSavePath(roiImageSavePathRoot + roiImageSaveFullPath);
+    string imageSavePathRoot = "/var/www";
+    string imageSaveFullPath =
+        Helper::GetHashPath(imageSavePathRoot, imgurl);
+    string imageSavePathVIN = imageSavePathRoot + "/" + imageSaveFullPath + "_VIN.jpg";
+    string imageSavePathRegDate = imageSavePathRoot + "/" + imageSaveFullPath + "_regDate.jpg";
+    eo.SetImageSavePathVIN(imageSavePathVIN);
+    eo.SetImageSavePathRegDate(imageSavePathRegDate);
+
     if (eo.Ocr()) {
       string result = eo.GetResult();
-      response << "{\"status\": \"success\", \"msg\": \"" << result
-               << "\", \"imgpath\": \"" << roiImageSaveFullPath << "\"}";
+      response << "{" 
+               << "\"status\": \"success\"" << "," 
+               << "\"msg\": \"" << result << "\"" << "," 
+               << "\"imgpath_VIN\": \"" << imageSavePathVIN << "\"" << "," 
+               << "\"imgpath_RegDate\": \"" << imageSavePathRegDate << "\"" 
+               << "}";
     } else {
       response << "{\"status\": \"fail\", \"msg\": \"ocr fail\"}";
     }

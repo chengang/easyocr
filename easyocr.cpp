@@ -29,8 +29,12 @@ bool EasyOcr::LoadSVM(void) {
 
 std::string EasyOcr::GetResult(void) { return this->result; }
 
-void EasyOcr::SetROIImageSavePath(std::string path) {
-  this->roiImageSavePath = path;
+void EasyOcr::SetImageSavePathVIN(std::string path) {
+  this->imageSavePathVIN = path;
+}
+
+void EasyOcr::SetImageSavePathRegDate(std::string path) {
+  this->imageSavePathRegDate = path;
 }
 
 bool EasyOcr::Ocr(void) {
@@ -40,7 +44,7 @@ bool EasyOcr::Ocr(void) {
   char pre[30] = "";
   bool ifRecSucc =
       recvin(this->mat, pre, &EasyOcr::svmvin, &EasyOcr::svm35, &EasyOcr::svm33,
-             &EasyOcr::svmLast5, this->roiImageSavePath.c_str());
+             &EasyOcr::svmLast5, this->imageSavePathVIN.c_str(), this->imageSavePathRegDate.c_str());
   this->result = pre;
   return ifRecSucc;
 }
