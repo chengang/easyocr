@@ -44,18 +44,16 @@ public:
     string imageSavePathRoot = "/var/www";
     string imageSaveFullPath =
         Helper::GetHashPath(imageSavePathRoot, imgurl);
-    string imageSavePathVIN = imageSavePathRoot + "/" + imageSaveFullPath + "_VIN.jpg";
-    string imageSavePathRegDate = imageSavePathRoot + "/" + imageSaveFullPath + "_regDate.jpg";
-    eo.SetImageSavePathVIN(imageSavePathVIN);
-    eo.SetImageSavePathRegDate(imageSavePathRegDate);
+    eo.SetImageSavePathVIN(imageSavePathRoot + "/" + imageSaveFullPath + "_VIN.jpg");
+    eo.SetImageSavePathRegDate(imageSavePathRoot + "/" + imageSaveFullPath + "_regDate.jpg");
 
     if (eo.Ocr()) {
       string result = eo.GetResult();
       response << "{" 
                << "\"status\": \"success\"" << "," 
                << "\"msg\": \"" << result << "\"" << "," 
-               << "\"imgpath_VIN\": \"" << imageSavePathVIN << "\"" << "," 
-               << "\"imgpath_RegDate\": \"" << imageSavePathRegDate << "\"" 
+               << "\"imgpath_VIN\": \"" << "/" << imageSaveFullPath << "_VIN.jpg" << "\"" << "," 
+               << "\"imgpath_RegDate\": \"" << "/" << imageSaveFullPath << "_regDate.jpg" << "\"" 
                << "}";
     } else {
       response << "{\"status\": \"fail\", \"msg\": \"ocr fail\"}";
