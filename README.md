@@ -1,6 +1,18 @@
-Rely on:  
-opencv-2.4.5  
-libmicrohttpd-0.9.33  
-clang-3.4.2  
-openssl-1.0.1e  
-boost-1.53.0
+![recognition](https://raw.githubusercontent.com/chengang/easyocr/master/pics/1.jpg)
+
+![HTTP API](https://raw.githubusercontent.com/chengang/easyocr/master/pics/2.jpg)
+
+Setuping is easy on CentOS7.  
+
+yum install epel-release  
+yum install opencv*  
+yum install libmicrohttpd*  
+yum install libcurl*  
+yum install boost  
+yum install boost-devel  
+yum install clang*  
+yum install openssl*  
+
+cd src  
+make  
+./easyocr 80 /var/www/html/pics/   
