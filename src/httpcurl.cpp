@@ -31,6 +31,7 @@ bool HttpCurl::GetVector(std::string &url, std::vector<char> &resp) {
 
   res = curl_easy_perform(curl);
   if (res != CURLE_OK) {
+    curl_easy_cleanup(curl);
     std::cerr << curl_easy_strerror(res) << std::endl;
     return false;
   }
@@ -38,6 +39,7 @@ bool HttpCurl::GetVector(std::string &url, std::vector<char> &resp) {
   long httpcode = 0;
   res = curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpcode);
   if (res != CURLE_OK || httpcode != 200) {
+    curl_easy_cleanup(curl);
     std::cerr << "http code is not 200 (" << httpcode << ")" << std::endl;
     return false;
   }

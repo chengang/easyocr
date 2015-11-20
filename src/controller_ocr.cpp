@@ -7,14 +7,15 @@
 #include "webserver.h"
 #include "helper.h"
 #include "httpcurl.h"
+#include "priv_config.h"
 
 using namespace std;
 using namespace cv;
 
-class MyController : public DynamicController {
+class OcrController : public DynamicController {
 public:
   virtual bool validPath(const char *path, const char *method) {
-    if (strcmp(path, "/") == 0 && strcmp("GET", method) == 0) {
+    if (strcmp(path, "/ocr") == 0 && strcmp("GET", method) == 0) {
       return true;
     }
     return false;
@@ -41,7 +42,7 @@ public:
 
     EasyOcr eo(imgData);
 
-    string imageSavePathRoot = "/var/www";
+    string imageSavePathRoot = PrivConfig::varBasePath;
     string imageSaveFullPath =
         Helper::GetHashPath(imageSavePathRoot, imgurl);
     eo.SetImageSavePathVIN(imageSavePathRoot + "/" + imageSaveFullPath + "_VIN.jpg");

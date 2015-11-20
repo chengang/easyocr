@@ -9,6 +9,14 @@
 
 #include "helper.h"
 
+bool Helper::isNumber(const std::string& s) {
+  if (s.empty())
+    return false;
+  std::string::const_iterator it = s.begin();
+  while (it != s.end() && std::isdigit(*it)) ++it;
+  return !s.empty() && it == s.end();
+}
+
 std::string Helper::GetHashPath(std::string basePath, std::string filename) {
   std::string hashFilename = Helper::GetSHA1String(filename);
   std::string hashPath =

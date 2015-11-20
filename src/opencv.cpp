@@ -1,16 +1,16 @@
 #include <stdlib.h>
 #include <sys/types.h>
-#include "highgui.h"
+#include <opencv2/highgui/highgui.hpp>
 #include <stdio.h>
 #include <math.h>
-#include "cv.h"
+#include <opencv/cv.h>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <list>
 #include <vector>
 #include <map>
-#include <ml.h>
+#include <opencv2/ml/ml.hpp>
 #include <time.h>
 #include <opencv2/imgproc/imgproc.hpp>
 
@@ -903,6 +903,8 @@ void re_cutagain(cv::Mat img, IplImage *pI_1, int threshold, int sw, int diji,
     //宽度:在左右多加三个像素点
     if ((pic_Arr[i][1] + 4) < pI_1->width) {
       w2 = w2 + 4;
+      if (pI_3)
+        cvReleaseImage(&pI_3);
       pI_3 = cvCreateImage(cvSize(ww + 4, height), 8, 3);
     }
     for (j = 0; j < height; j++) //高度不变
@@ -1001,7 +1003,7 @@ void re_cut(cv::Mat img, IplImage *pI_1, int threshold, int sw, int diji,
   verProjection_cut(vArr, 1000, &pic_ArrNumber, threshold, pic_Arr);
   threshold++;     //分割阈值
   int wbiaoji = 0; //标记宽度小于5 的横坐标起始点
-                   //   cout<<pic_ArrNumber<<endl;
+                   // cout<<"pic_arrnum:"<<pic_ArrNumber<<endl;
   for (i = 0; i < pic_ArrNumber; i++) {
     //字符宽度
     pic_width = pic_Arr[i][1] - pic_Arr[i][0];
@@ -1015,6 +1017,7 @@ void re_cut(cv::Mat img, IplImage *pI_1, int threshold, int sw, int diji,
     //宽度:在左右多加三个像素点
     if ((pic_Arr[i][1] + 4) < pI_1->width) {
       w2 = w2 + 4;
+
       pI_3 = cvCreateImage(cvSize(pic_width + 4, height), 8, 3);
     } else {
       pI_3 = cvCreateImage(cvSize(pic_width, height), 8, 3);
@@ -1062,19 +1065,21 @@ void re_cut(cv::Mat img, IplImage *pI_1, int threshold, int sw, int diji,
         re_cutagain(img_5, pic, threshold, sw, diji, flag, zifuxu, vinCharImg);
         cvReleaseImage(&des2);
       }
+      cvReleaseImage(&pI_3);
       cvReleaseImage(&pic);
       continue;
     }
     //保存分割出来的图片
     if (flag == 1) {
       charprocess(pI_3, diji, zifuxu, vinCharImg);
+      // cvReleaseImage(&pI_3);
+      // cout<< "flag=1"<<endl;
     } else {
       zifuxu++;
-
+      // cout<<"flag=0"<<endl;
       vinCharImg.push_back(pI_3); //保存分
     }
   }
-  // cvReleaseImage(&pI_3);
 }
 //找日期图片: rect标记Vin码的位置;flag_定位vin码是否发生了旋转
 void FindDatePic(IplImage *img, CvRect rect, int flag,
@@ -1180,6 +1185,7 @@ bool ExtrVin(IplImage *src, IplImage *img, CvSVM *svmvin,
       IplImage *img_c = cvCreateImage(cvSize(rect1.width, rect1.height), 8, 3);
       IplImage *img_cc = NULL;
       IplImage *xuanzhuan = NULL;
+      IplImage *tempimg = NULL;
       cvCopy(img_Clone1, img_c); //重置感兴趣区域
       cvResetImageROI(img_Clone1);
       //倾斜矫正
@@ -1200,8 +1206,12 @@ bool ExtrVin(IplImage *src, IplImage *img, CvSVM *svmvin,
         if (rect.x < img->width / 4) //如果定位的位置在左上角则旋转图片180°
         {
           ifrotate_flag = 1;
+          tempimg = img_cc;
           img_cc = rotateImage(img_cc, 90, TRUE);
+          cvReleaseImage(&tempimg);
+          tempimg = img_cc;
           img_cc = rotateImage(img_cc, 90, TRUE);
+          cvReleaseImage(&tempimg);
         }
         // else
         cvResize(img_cc, trainImg); //归一化大小
@@ -1215,6 +1225,7 @@ bool ExtrVin(IplImage *src, IplImage *img, CvSVM *svmvin,
         hog->compute(trainImg, descriptors, Size(1, 1),
                      Size(0, 0)); //调用计算函数开始计算
         cvReleaseImage(&trainImg);
+        delete hog;
         // cout<<"HOG dims: "<<descriptors.size()<<endl;
         CvMat *SVMtrainMat = cvCreateMat(1, descriptors.size(), CV_32FC1);
         int n = 0;
@@ -1275,7 +1286,8 @@ bool ExtrVin(IplImage *src, IplImage *img, CvSVM *svmvin,
             ffff = 1;
             zifuxu = 0;
             re_cut(matimg, nimg, threshold, sw, diji, 0, zifuxu, vinCharImg);
-            // cout<<zifuxu<<endl;
+            // cout<<"flag 0 :"<<zifuxu<<endl;
+            // cout<<"flag 0 vincharimg size:"<<vinCharImg.size()<<endl;
           }
           if (zifuxu < 17 && ffff == 1) {
             for (int i = vinCharImg.size() - zifuxu; i < vinCharImg.size();
@@ -1424,6 +1436,7 @@ bool ExtrVin1(IplImage *src, IplImage *img, CvSVM *svmvin,
         hog->compute(trainImg, descriptors, Size(1, 1),
                      Size(0, 0)); //调用计算函数开始计算
         // cout<<"HOG dims: "<<descriptors.size()<<endl;
+        delete hog;
         CvMat *SVMtrainMat = cvCreateMat(1, descriptors.size(), CV_32FC1);
         int n = 0;
         for (vector<float>::iterator iter = descriptors.begin();
@@ -1468,6 +1481,7 @@ bool ExtrVin1(IplImage *src, IplImage *img, CvSVM *svmvin,
           int zifuxu = 0; //对字符剪切后的字符数
           re_cut(matimg, nimg, threshold, sw, ++diji, 1, zifuxu, vinCharImg);
           // cout<<"size:"<<vinCharImg.size()<<endl;
+          // cout<<"zifu:"<<zifuxu<<endl;
           int ffff = 0;
           if (zifuxu < 17) {
             for (int i = vinCharImg.size() - zifuxu; i < vinCharImg.size();
@@ -1834,6 +1848,7 @@ void FeatureExtraction(IplImage *src, CvMat *data_mat, int ind) //
   hog->compute(trainImg, descriptors, Size(1, 1),
                Size(0, 0)); //调用计算函数开始计算
   // cout<<"nidaye"<<endl ;
+  delete hog;
   int n = 0;
   for (vector<float>::iterator iter = descriptors.begin();
        iter != descriptors.end(); iter++) {
@@ -1848,6 +1863,9 @@ void FeatureExtraction(IplImage *src, CvMat *data_mat, int ind) //
 bool recvin(cv::Mat src_mat, char pre[], CvSVM *svmvin, CvSVM *svm33,
             CvSVM *svm35, CvSVM *svmLast5, const char path_failimg[],
             const char path_dateimg[]) {
+
+  if (src_mat.empty())
+    return false;
 
   string charList = "0123456789ABCDEFGHJKLMNPRSTUVWXYZIQ"; //字符
   IplImage *img = NULL;
@@ -1960,7 +1978,7 @@ bool recvin(cv::Mat src_mat, char pre[], CvSVM *svmvin, CvSVM *svm33,
       //保存识别结果
       pre[k] = (char)charList[res];
       k++;
-
+      // cout<<"relase it " <<endl;
       cvReleaseImage(&charImg);
     }
 
@@ -1977,3 +1995,30 @@ bool recvin(cv::Mat src_mat, char pre[], CvSVM *svmvin, CvSVM *svm33,
   cvReleaseImage(&r_img);
   return true;
 }
+
+/*
+int main() {
+  CvSVM svmvin;
+  CvSVM svm33;
+  CvSVM svm35;
+  CvSVM svmLast5;
+  cv::Mat src_mat;
+  char pre[100];
+  memset(pre, 0, sizeof(pre));
+
+  svmvin.load("SVM_D.xml");
+  svm33.load("SVM_DATA_all0-9_1000_LINEAR.xml");
+  svm35.load("SVM_DATA_all0-Q_1000_LINEAR.xml");
+  svmLast5.load("SVM_DATA_all0-Z_1000_LINEAR.xml");
+
+  src_mat = imread("licensefimg.jpg");
+
+  bool a = recvin(src_mat, pre, &svmvin, &svm33, &svm35, &svmLast5, "fail.jpg",
+                  "date.jpg");
+
+  printf("%s %s\n", pre, a ? "true" : "false");
+
+  return 0;
+}
+*/
+
